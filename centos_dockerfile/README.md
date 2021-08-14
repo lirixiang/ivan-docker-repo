@@ -8,7 +8,7 @@ docker build -t centos-dev .
 # 1 运行。下面会对本容器做进一步的修改设置
 #  -d 	后台运行容器
 #  -p  	指定端口映射，格式为：主机(宿主)端口:容器端口
-#  --name="yore_centos7"		为容器指定一个名称
+#  --name="centos-dev"		为容器指定一个名称
 #  -h "hostname"				    指定容器的hostname；
 #  -m 	设置容器使用内存最大值；
 #  --volume、-v					绑定一个卷
@@ -41,22 +41,9 @@ cat /etc/redhat-release
 ```
 在容器中安装配置一些基础服务
 ```shell
-# 1 为了更好的编辑文件可以安装 vim
-yum install -y vim
+yum install -y vim wget tree psmisc net-tools lsof
 
-# 2 为了查看端口信息更方便可以安装 lsof
-yum install -y lsof
-
-# 3 安装 wget
-yum install -y wget
-
-# 4 安装 tree
-yum install -y tree
-
-# 5 python 工具
-yum install -y python-devel
-
-# 6 安装编译 C 的环境
+#  安装编译 C 的环境
 yum install -y gcc gcc-c++
 yum install -y zlib
 yum install -y zlib-devel
@@ -69,36 +56,20 @@ yum -y install passwd openssl openssh-server  openssh-clients
 mkdir  /var/run/sshd/
 
 # 2 修改配置
-vim /etc/ssh/sshd_config
-##  大概在  38 - 45 行之间，修改或添加如下三个配置
-PermitRootLogin yes
-RSAAuthentication yes
-PubkeyAuthentication yes 
-sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+yum -y install passwd openssl openssh-server  openssh-clients
+sed -i "s/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g" /etc/ssh/sshd_config
+sed -i "s/#PermitRootLogin yes/PermitRootLogin yes/g" /etc/ssh/sshd_config
+echo root:123456 | chpasswd
 
-# 3 sshd 服务的启停
-## 3.1 启动
+#  sshd 服务的启停
+#启动
 systemctl start sshd.service
-##  3.2 查看 sshd 服务状态
+# 查看 sshd 服务状态
 systemctl status sshd
-## 3.3 停止
+# 停止
 systemctl start sshd.service
-
-# 4 设置为开机自启
+# 设置为开机自启
 systemctl enable sshd.service
-
-# 【可跳过】5 生成ssh的密钥和公钥
-# ssh-keygen -t rsa
-
-# 6 查看 SSH 服务
-lsof -i:22
-
-# 7 设置 root 密码（2020）
-passwd
-
-# 8 通过 ssh 访问容器
-ssh root@bigdata
-
 ```
 
 镜像提交到阿里云镜像库
@@ -129,18 +100,11 @@ docker images
 ```
 开发环境版 Centos7 镜像
 ```shell
-将开发中常用到的环境进行安装和配置
-# 1 运行。下面会对本容器做进一步的修改设置
-# 以 base 镜像为准，启动容器
-docker run --privileged=true --cap-add SYS_ADMIN -e container=docker -it \
--p 30022:22 -p 30080:80  -h "bigdata01" \
---name="centos7_dev1" -d centos7_base:v1 /usr/sbin/init
 
-# 2 进入容器
 docker ps
 docker exec -it $CONTAINER_ID /bin/bash
 
-# 3 hosts 改为。
+#  hosts 改为。
 172.17.0.3   yore.node1 bigdata01
 
 4.1 JDK
@@ -169,119 +133,11 @@ source /etc/profile
 vim ~/.bashrc
 # 最后一行添加，保存
 source /etc/profile
-
-# 6 查看Java版本
-java -version
-4.2 Git
-# 1 下载源码方式，
-wget -O git-2.27.0.tar.gz https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.27.0.tar.gz
-
-# 2 解压
-tar -zxf git-2.27.0.tar.gz -C /tmp/
-cd /tmp/git-2.27.0 
-
-# 3 检验相关依赖，设置安装路径
-./configure --prefix=/usr/local/git
-
-# 4 安装
-make && make install
-
-# 5 创建软连接
-ln -s /usr/local/git/bin/git /usr/bin/git
-
-# 6 查看版本
-git -v
-4.3 Maven
-# 1 下载
-wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
-
-# 2 解压
-tar -zxf apache-maven-3.6.3-bin.tar.gz
-mv apache-maven-3.6.3 /usr/local/maven3
-
-# 3 修改配置
-vim /usr/local/maven3/conf/settings.xml
-配置如下内容
-
-<!--大概在 55 行左右添加，指定本地仓库的路径-->
- <localRepository>/opt/.m2/repo</localRepository>
-
- <!--大概在158 行左右，配置国内镜像，这里配置为阿里 Maven 镜像-->
-<!-- 配置阿里云的镜像 -->
-<mirror>
-      <id>nexus-aliyun</id>
-      <mirrorOf>*</mirrorOf>
-      <name>Nexus aliyun</name>
-      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-</mirror>
-
-<mirror>
-  <id>central-repos1</id>
-  <name>Central Repository 2</name>
-  <url>https://repo1.maven.org/maven2/</url>
-      <!-- 表示只为central仓库做镜像，如果想为所有的仓库做镜像那么可以改为 -->
-  <mirrorOf>*</mirrorOf>
-</mirror>
-
-继续完成下面的配置
-
-# 4 配置环境变量，
-vim /etc/profile
-# set Maven environment
-export MAVEN_HOME=/usr/local/maven3
-export PATH=$PATH:$MAVEN_HOME/bin
-
-# 5 生效
-source /etc/profile
-
-# 6 查看版本
-mvn -version
-
-4.4 Nginx
-# 1 下载 Nginx 离线安装包。以 x86、centos7版本为例
-wget http://nginx.org/packages/mainline/centos/7/x86_64/RPMS/nginx-1.17.6-1.el7.ngx.x86_64.rpm
-
-# 2 安装
-rpm -ivh nginx-1.17.6-1.el7.ngx.x86_64.rpm
-
-# 3 配置文件
-/etc/nginx
-# server 服务可以配置到下面路径，以 .conf 结尾，重启或使配置生效
-/etc/nginx/conf.d/
-
-# 4 常用命令
-## 4.1 启动，应为已经将内部 80端口映射到了宿主机的 30080，所以通过宿主机 ip 和 30080 端口浏览器访问
-systemctl start nginx
-## 4.2 状态
-systemctl status nginx
-## 4.3 停止
-systemctl stop nginx
-## 4.4 重启
-systemctl restart nginx
-## 4.5 配置重新生效
-/usr/sbin/nginx -s reload
-
-# 这里提供的镜像已停止了 Nginx 服务，在需要时请手动启动
-4.5 Node.js
-# 1 下载
-wget https://nodejs.org/dist/v12.18.2/node-v12.18.2-linux-x64.tar.xz
-
-# 2 解压
-tar -xf node-v12.18.2-linux-x64.tar.xz
-mv node-v12.18.2-linux-x64 /usr/local/nodejs
-
-# 3 创建连接
-ln -s /usr/local/nodejs/bin/node /usr/bin/node
-ln -s /usr/local/nodejs/bin/npm /usr/bin/npm
-
-# 4 查看版本
-node -v
-npm -v
 ```
+
 带 MySQL 版Centos7镜像
 ```shell
 这里在开发环境版的镜像基础上安装 MySQL 数据库
-
 5.1 设置 Docker 网络
 # 1 查看存在的网络（默认会创建三个）
 #  bridge           桥接网络。每次Docker容器重启时，会按照顺序获取对应的IP地址，这个就导致重启后 IP 地址可能会改变

@@ -1,9 +1,11 @@
 #!/bin/bash
 set -x
+
 # 环境变量
 export LS_OPTIONS='--color=auto'                       # 如果没有指定，则自动选择颜色
 export CLICOLOR='Yes'                                  #是否输出颜色
 export LSCOLORS='CxfxcxdxbxegedabagGxGx'               #指定颜色
+
 # 别名
 alias ll='ls $LS_OPTIONS -l'
 
