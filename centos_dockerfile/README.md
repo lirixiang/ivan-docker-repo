@@ -98,42 +98,6 @@ docker commit $CONTAINER_ID dev_mysql:v1
 # 3 查看当前的镜像库
 docker images
 ```
-开发环境版 Centos7 镜像
-```shell
-
-docker ps
-docker exec -it $CONTAINER_ID /bin/bash
-
-#  hosts 改为。
-172.17.0.3   yore.node1 bigdata01
-
-4.1 JDK
-# 1 下载。如果下面链接失效，则需要登录Oracle的账号，
-# 访问 https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html 下载 jdk8
-wget https://download.oracle.com/otn/java/jdk/8u231-b11/5b13a193868b4bf28bcb45c792fce896/jdk-8u231-linux-x64.tar.gz?AuthParam=1573137213_adc79b33f2d9ed27cb8b09b6adf71820
-
-# 2 解压
-tar -zxf jdk-8u231-linux-x64.tar.gz -C /usr/local/
-chown root:root -R /usr/local/jdk1.8.0_231
-
-# 3 配置环境变量
-vim /etc/profile
-# 添加如下配置
-### set java environment
-JAVA_HOME=/usr/local/jdk1.8.0_231
-JRE_HOME=$JAVA_HOME/jre
-CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
-PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-export JAVA_HOME JRE_HOME CLASS_PATH PATH
-
-# 4 并加载生效：
-source /etc/profile
-
-# 5 为了使每次进入容器时都生效
-vim ~/.bashrc
-# 最后一行添加，保存
-source /etc/profile
-```
 
 带 MySQL 版Centos7镜像
 ```shell
