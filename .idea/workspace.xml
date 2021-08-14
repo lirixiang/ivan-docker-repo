@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="947701a9-48ec-4456-bff3-5c58196c1bac" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/centos7_dockerfile/init.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/centos7_dockerfile/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/centos7_dockerfile/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/centos7_dockerfile/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/centos7_dockerfile/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/centos7_dockerfile/init.sh" beforeDir="false" afterPath="$PROJECT_DIR$/centos7_dockerfile/init.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

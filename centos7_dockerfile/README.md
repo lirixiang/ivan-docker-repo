@@ -16,8 +16,9 @@ docker build -t centos-dev .
 #  --privileged=false   指定容器是否为特权容器，特权容器拥有所有的capabilities
 #  --cap-add=[]， 			添加权限，权限清单详见：http://linux.die.net/man/7/capabilities
 docker run --privileged=true --cap-add SYS_ADMIN -e container=docker -it \
--p 30022:22 -p 30080:80  -h "bigdata" \
---name="centos7_base" -d yore/centos7_v1:latest /usr/sbin/init
+-p 30022:22 -p 30080:80  -h "docker-test" \
+-v ~/Desktop:/root/Desktop \
+--name="centos-dev" -d centos-dev:latest /usr/sbin/init
 
 # 2 启停容器
 ## 2.1 关闭容器
