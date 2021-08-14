@@ -68,7 +68,7 @@ yum -y install passwd openssl openssh-server  openssh-clients
 mkdir  /var/run/sshd/
 
 # 2 修改配置
-vim /etc/ssh/sshd_config +39
+vim /etc/ssh/sshd_config
 ##  大概在  38 - 45 行之间，修改或添加如下三个配置
 PermitRootLogin yes
 RSAAuthentication yes

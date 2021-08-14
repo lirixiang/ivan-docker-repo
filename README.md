@@ -8,4 +8,5 @@ ADD source_dir/file dest_dir/file  将宿主机的文件复制到容器中 如�
 COYP source_dir/file dest_dir/file  同ADD 就是不会解压
 WORKDIR path_dir  工作目录 就是这样命令执行的目录 登录容器后也在这个目录
 CMD 容器启动后要处理的命令
+ENTRYPOINT https://yeasy.gitbook.io/docker_practice/image/dockerfile/entrypoint
 ```
