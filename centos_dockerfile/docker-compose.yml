@@ -6,15 +6,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    hostname: docker-test
+    environment:
+      - container=docker
     restart: always
-    privileged: true #设置容器的权限为root
+
+
+    privileged: true
+    cap_add:
+      - ALL
+
     ports:
-      - 30022:22
-      - 30080:80
-      - 38000:8000
-      - 38888:8888
+      - "30022:22"
+      - "30080:80"
+      - "38000:8000"
+      - "38888:8888"
+
     volumes:
       - ~/Desktop:/root/Desktop
+
     command:
       - /bin/sh
       - -c
