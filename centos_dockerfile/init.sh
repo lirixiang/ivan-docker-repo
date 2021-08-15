@@ -26,7 +26,7 @@ yum clean all
 rm -rf /var/cache/yum/*
 
 # python 工具
-yum install -y python-devel python3
+# yum install -y python-devel python3
 
 # go 工具
 yum install -y go

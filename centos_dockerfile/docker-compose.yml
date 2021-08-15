@@ -1,0 +1,22 @@
+version: '2'
+services:
+  centos-dev:
+    container_name: centos-dev
+    image: centos-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    privileged: true #设置容器的权限为root
+    ports:
+      - 30022:22
+      - 30080:80
+      - 38000:8000
+      - 38888:8888
+    volumes:
+      - ~/Desktop:/root/Desktop
+    command:
+      - /bin/sh
+      - -c
+      - |
+        /usr/sbin/init
