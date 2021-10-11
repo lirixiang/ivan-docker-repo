@@ -1,32 +1,17 @@
 #!/bin/bash
 set -x
 cat  >> /root/.bashrc << EOF
-# env
 export PS1='[\u@\h \# \w]\$'
 export LANG=en_US.utf8
-
-# alias
-alias l.='ls -d .* --color=tty'
-alias ll='ls -l --color=tty'
-alias ls='ls --color=tty'
-alias vi='vim'
-alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
-alias ...=../..
-alias ....=../../..
-alias .....=../../../..
-alias ......=../../../../..
 EOF
 source /root/.bashrc
 
 # 为了更好的编辑文件可以安装工具
 yum update -y
 yum install -y epel-release
-yum install -y vim wget  psmisc net-tools lsof
 yum clean all
 rm -rf /var/cache/yum/*
 
-# python 工具
-# yum install -y python-devel python3
 
 # go 工具
 yum install -y go
